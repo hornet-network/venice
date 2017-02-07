@@ -60,6 +60,13 @@ module Venice
         end
       end
 
+      @latest_receipt_info = []
+      if attributes['latest_receipt_info']
+        attributes['latest_receipt_info'].each do |latest_receipt_info_attributes|
+          @latest_receipt_info << InAppReceipt.new(latest_receipt_info_attributes)
+        end
+      end
+
     end
 
     def to_hash
@@ -74,7 +81,7 @@ module Venice
         :download_id => @download_id,
         :requested_at => (@requested_at.httpdate rescue nil),
         :in_app => @in_app.map{|iap| iap.to_h },
-        :latest_receipt_info => @latest_receipt_info
+        :latest_receipt_info => @latest_receipt_info.map{|lri| lri.to_h }
       }
     end
     alias_method :to_h, :to_hash
