@@ -46,7 +46,7 @@ module Venice
         if latest_receipt_info_attributes = json['latest_receipt_info']
           # AppStore returns 'latest_receipt_info' even if we use over iOS 6. Besides, its format is an Array.
           receipt.latest_receipt_info = []
-          case latest_receipt_info_attributes.class
+          case latest_receipt_info_attributes
             when Array
               latest_receipt_info_attributes.each do |latest_receipt_info_attribute|
                 # latest_receipt_info format is identical with in_app
