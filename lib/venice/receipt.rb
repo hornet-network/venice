@@ -101,6 +101,8 @@ module Venice
         begin
           client.verify!(data, options)
         rescue VerificationError => error
+          raise error if !options[:allow_sandbox]
+
           case error.code
           when 21007
             client = Client.development
