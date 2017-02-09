@@ -32,13 +32,18 @@ module Venice
     # Original json response from AppStore
     attr_reader :original_json_response
 
-
+    # Stuff for old iOS6 receipts
+    attr_reader :product_id
+    attr_reader :quantity
+    attr_reader :transaction_id
+    attr_reader :original_transaction_id
+    attr_reader :purchase_date
     attr_accessor :latest_receipt_info
 
     def initialize(attributes = {})
       @original_json_response = attributes['original_json_response']
 
-      @bundle_id = attributes['bundle_id']
+      @bundle_id = attributes['bundle_id'] || attributes['bid']
       @application_version = attributes['application_version']
       @original_application_version = attributes['original_application_version']
       if attributes['original_purchase_date']
@@ -60,13 +65,20 @@ module Venice
         end
       end
 
+      @product_id = attributes['product_id']
+      @quantity = attributes['quantity']
+      @transaction_id = attributes['transaction_id']
+      @original_transaction_id = attributes['original_transaction_id']
+      if attributes['purchase_date']
+        @purchase_date = DateTime.parse(attributes['purchase_date'])
+      end
+
       @latest_receipt_info = []
       if attributes['latest_receipt_info']
         attributes['latest_receipt_info'].each do |latest_receipt_info_attributes|
           @latest_receipt_info << InAppReceipt.new(latest_receipt_info_attributes)
         end
       end
-
     end
 
     def to_hash
@@ -80,6 +92,11 @@ module Venice
         :adam_id => @adam_id,
         :download_id => @download_id,
         :requested_at => (@requested_at.httpdate rescue nil),
+        :product_id => @product_id,
+        :quantity => @quantity,
+        :transaction_id => @transaction_id,
+        :original_transaction_id => @original_transaction_id,
+        :purchase_date => (@purchase_date.httpdate rescue nil),
         :in_app => @in_app.map{|iap| iap.to_h },
         :latest_receipt_info => @latest_receipt_info.map{|lri| lri.to_h }
       }

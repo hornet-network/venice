@@ -57,7 +57,7 @@ module Venice
         @expires_at = Time.at(expires_attribute.to_i / 1000)
       elsif attributes['expires_at']
         begin
-          @expires_at = Time.parse(attributes['expires_at'])
+          @expires_at = DateTime.parse(attributes['expires_at'])
         rescue
         end
       end
